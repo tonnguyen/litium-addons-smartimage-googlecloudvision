@@ -65,7 +65,7 @@ namespace Litium.AddOns.SmartImage.GoogleCloudVision
                 var labels = res.LabelAnnotations.Select(a => a.Description);
                 var landmarks = res.LandmarkAnnotations.Select(a => a.Description);
                 requestIndex++;
-                yield return new AnalysisResponse() { SystemId = imageSystemId, Tags = labels.Concat(landmarks) };
+                yield return new AnalysisResponse() { SystemId = imageSystemId, Tags = landmarks.Concat(labels) };
             }
             requests.Clear();
             requestSystemIds.Clear();
