@@ -1,5 +1,10 @@
 # Litium Smart Image Add-on - Google Cloud Vision
-An Add-on for Litium platform, which analyzes and extracts rich information from images, powered by Google Cloud Vision, to categorize images in a better way.
+An Add-on for Litium platform, which analyzes and extracts rich information from images, powered by Google Cloud Vision, to categorize images in a better way. For example, we can search for images that contain object like building:
+![Search for buildings](images/building.PNG)
+
+ Or tree:
+
+![Search for tree](images/tree.PNG)
 
 ## Install
 To install this Add-on to your site, you need a site running equivalent version of Litium. This Add-on's version is inlined with Litium's version. If its version is 6.1.0, that means it is built against Litium 6.1.0. 
