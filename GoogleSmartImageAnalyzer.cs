@@ -1,5 +1,7 @@
 ﻿using Google.Cloud.Vision.V1;
+using Litium.Application.Media;
 using Litium.Blobs;
+using Litium.Studio.Plugins.ImageResizer;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -10,17 +12,15 @@ namespace Litium.AddOns.SmartImage.GoogleCloudVision
     /// <summary>
     /// An implementation of ISmartImageAnalyzer which uses Google Cloud Vision API.
     /// </summary>
-    public class GoogleSmartImageAnalyzer : ISmartImageAnalyzer
+    public class GoogleSmartImageAnalyzer : BaseSmartImageAnalyzer
     {
-        private readonly BlobService _blobService;
         private const int BatchSize = 16;
 
-        public GoogleSmartImageAnalyzer(BlobService blobService)
-        {
-            _blobService = blobService;
-        }
+        public GoogleSmartImageAnalyzer(BlobService blobService, IImageResizer imageResizer, MimeExtensionHelper mimeExtensionHelper)
+            : base(blobService, imageResizer, mimeExtensionHelper)
+        { }
 
-        public IEnumerable<AnalysisResponse> Process(ConcurrentQueue<ImageQueue> queues)
+        public override IEnumerable<AnalysisResponse> Process(ConcurrentQueue<ImageQueue> queues)
         {
             var client = ImageAnnotatorClient.Create();
             var batchReqs = new List<AnnotateImageRequest>();
@@ -28,8 +28,7 @@ namespace Litium.AddOns.SmartImage.GoogleCloudVision
             var response = new List<AnalysisResponse>();
             while (batchReqs.Count < BatchSize && queues.TryDequeue(out var image))
             {
-                var blobContainer = _blobService.Get(image.BlobUri);
-                var blobStream = blobContainer.GetDefault().OpenRead();
+                var blobStream = OpenRead(image, new System.Drawing.Size(500, 500));
                 var gImage = Image.FromStream(blobStream);
                 batchReqs.Add(new AnnotateImageRequest
                 {
